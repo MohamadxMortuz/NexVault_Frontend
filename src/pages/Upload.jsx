@@ -119,8 +119,17 @@ export default function UploadPage() {
       .catch(() => setHistoryLoading(false));
   };
 
+  // Fetch on mount
   useEffect(() => {
     fetchHistory();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Refetch after upload completes with a small delay
+  useEffect(() => {
+    if (!done) return;
+    const timer = setTimeout(() => fetchHistory(), 1000);
+    return () => clearTimeout(timer);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);
 
