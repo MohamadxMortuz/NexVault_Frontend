@@ -107,14 +107,20 @@ export default function UploadPage() {
   const copyLink = () => { navigator.clipboard.writeText(done.link); setCopied(true); setTimeout(() => setCopied(false), 2000); };
 
   const [history, setHistory] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchHistory = () => {
     const t = token();
-    if (!t) return;
+    if (!t) { setHistoryLoading(false); return; }
+    setHistoryLoading(true);
     fetch(`${API}/files/my-files`, { headers: { Authorization: `Bearer ${t}` } })
       .then(r => r.json())
-      .then(data => setHistory(data.files || []))
-      .catch(() => {});
+      .then(data => { setHistory(data.files || []); setHistoryLoading(false); })
+      .catch(() => setHistoryLoading(false));
+  };
+
+  useEffect(() => {
+    fetchHistory();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);
 
@@ -339,9 +345,19 @@ export default function UploadPage() {
             <h2 className="text-base font-bold text-white flex items-center gap-2">
               <History size={16} className="text-purple-400" /> Upload History
             </h2>
-            <span className="badge badge-purple">{history.length} files</span>
+            <div className="flex items-center gap-2">
+              <span className="badge badge-purple">{history.length} files</span>
+              <button onClick={fetchHistory} className="w-7 h-7 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-purple-400 transition-colors" title="Refresh">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+              </button>
+            </div>
           </div>
-          {history.length === 0 ? (
+          {historyLoading ? (
+            <div className="text-center py-10 space-y-3">
+              <span className="animate-spin inline-block w-7 h-7 border-2 border-purple-500/20 border-t-purple-500 rounded-full" />
+              <p className="text-gray-500 text-sm">Loading history...</p>
+            </div>
+          ) : history.length === 0 ? (
             <div className="text-center py-10">
               <div className="text-4xl mb-3 opacity-20">📭</div>
               <p className="text-gray-500 text-sm">No uploads yet</p>
