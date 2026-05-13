@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Download, Search, FileText, AlertCircle, CheckCircle, Clock, Trash2, HardDrive, Zap, Shield } from 'lucide-react';
+import { Download, Search, FileText, AlertCircle, CheckCircle, Clock, Trash2, HardDrive, Zap, Shield, Copy, History } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const API = 'http://localhost:5001/api';
@@ -22,7 +22,22 @@ export default function DownloadPage() {
   const [search, setSearch] = useState('');
   const [files, setFiles] = useState([]);
   const [loadingFiles, setLoadingFiles] = useState(true);
+  const [dlHistory, setDlHistory] = useState([]);
+
+  const fetchDlHistory = () => {
+    fetch(`${API}/files/download-history`, { headers: { Authorization: `Bearer ${token()}` } })
+      .then(r => r.json())
+      .then(data => setDlHistory(data.history || []))
+      .catch(() => {});
+  };
   const [downloadingId, setDownloadingId] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
+
+  const copyLink = (shareLink, id) => {
+    navigator.clipboard.writeText(`${window.location.origin}/share/${shareLink}`);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
   const [dlProgress, setDlProgress] = useState(0);
   const [dlSpeed, setDlSpeed] = useState('');
   const [dlLoaded, setDlLoaded] = useState(0);
@@ -35,6 +50,8 @@ export default function DownloadPage() {
       .then(r => r.json())
       .then(data => { setFiles(data.files || []); setLoadingFiles(false); })
       .catch(() => setLoadingFiles(false));
+    fetchDlHistory();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const refreshFiles = () => {
@@ -49,7 +66,14 @@ export default function DownloadPage() {
     return val.trim();
   };
 
-  const triggerDownload = (shareLink, fileName, fileSize) => {
+  const deleteFile = async (id) => {
+    try {
+      await fetch(`${API}/files/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token()}` } });
+      setFiles(prev => prev.filter(f => f.id !== id));
+    } catch {}
+  };
+
+  const triggerDownload = (shareLink, fileName, fileSize, fileId = null) => {
     setDownloadingId(shareLink);
     setDlProgress(0);
     setDlLoaded(0);
@@ -89,7 +113,7 @@ export default function DownloadPage() {
         URL.revokeObjectURL(url);
         setStatus('success');
         setFound(prev => prev || { originalName: fileName });
-        setTimeout(() => { setDownloadingId(null); setDlProgress(0); refreshFiles(); }, 2000);
+        setTimeout(() => { setDownloadingId(null); setDlProgress(0); refreshFiles(); fetchDlHistory(); }, 2000);
       } else {
         setStatus('error');
         setDownloadingId(null);
@@ -267,8 +291,24 @@ export default function DownloadPage() {
                         </div>
                       </div>
                       <button
+                        className={`btn-outline px-3 py-2 text-xs flex-shrink-0 ${copiedId === file.id ? 'text-green-400 border-green-500/40' : ''}`}
+                        onClick={() => copyLink(shareLink, file.id)}
+                        title="Copy share link"
+                      >
+                        {copiedId === file.id ? <><CheckCircle size={13} /> Copied!</> : <><Copy size={13} /> Share</>}
+                      </button>
+                      <button
+                        className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors"
+                        style={{ background: 'rgba(239,68,68,0.1)', color: '#f87171' }}
+                        onClick={() => deleteFile(file.id)}
+                        disabled={activeDownload}
+                        title="Delete file"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                      <button
                         className="btn-success px-4 py-2 text-xs flex-shrink-0"
-                        onClick={() => { setFound({ originalName: file.originalName }); triggerDownload(shareLink, file.originalName, file.size); }}
+                        onClick={() => { setFound({ originalName: file.originalName }); triggerDownload(shareLink, file.originalName, file.size, file.id); }}
                         disabled={activeDownload}
                       >
                         {isThis
@@ -299,6 +339,42 @@ export default function DownloadPage() {
                   </div>
                 );
               })}
+            </div>
+          )}
+        </div>
+
+        {/* Download History */}
+        <div className="card mt-6 animate-fade-up">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-base font-bold text-white flex items-center gap-2">
+              <History size={16} className="text-green-400" /> Download History
+            </h2>
+            <span className="badge badge-green">{dlHistory.length} downloads</span>
+          </div>
+          {dlHistory.length === 0 ? (
+            <div className="text-center py-10">
+              <div className="text-4xl mb-3 opacity-20">📭</div>
+              <p className="text-gray-500 text-sm">No downloads yet</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {dlHistory.map((entry, i) => (
+                <div key={i} className="flex items-center gap-4 p-4 rounded-2xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style={{ background: 'rgba(0,200,83,0.08)' }}>
+                    {fileIcon(entry.fileName)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white text-sm font-semibold truncate">{entry.fileName}</p>
+                    <div className="flex items-center gap-3 mt-1 flex-wrap">
+                      <span className="flex items-center gap-1 text-xs text-gray-500"><HardDrive size={11} /> {fmt(entry.fileSize)}</span>
+                      <span className="flex items-center gap-1 text-xs text-gray-500"><Clock size={11} /> {new Date(entry.downloadedAt).toLocaleString()}</span>
+                    </div>
+                  </div>
+                  <span className="flex items-center gap-1 text-xs text-green-400 flex-shrink-0">
+                    <CheckCircle size={13} /> Downloaded
+                  </span>
+                </div>
+              ))}
             </div>
           )}
         </div>

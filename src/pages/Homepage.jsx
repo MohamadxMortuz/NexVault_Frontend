@@ -1,35 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Shield, Upload, Download, Link2, Zap, Clock, Lock,
-  CheckCircle, ArrowRight, Star, Users, HardDrive, FileUp,
-  ChevronRight, Eye, RefreshCw, Server
+  CheckCircle, ArrowRight, Star,
+  ChevronRight, Eye, RefreshCw
 } from 'lucide-react';
-
-/* ── Animated Counter ── */
-function useCountUp(target, duration = 2000) {
-  const [count, setCount] = useState(0);
-  const ref = useRef(null);
-  const started = useRef(false);
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting || started.current) return;
-      started.current = true;
-      observer.disconnect();
-      let start = 0;
-      const step = target / (duration / 16);
-      const timer = setInterval(() => {
-        start = Math.min(start + step, target);
-        setCount(Math.floor(start));
-        if (start >= target) clearInterval(timer);
-      }, 16);
-    });
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [target, duration]);
-  return [count, ref];
-}
 
 /* ── Fade-in wrapper ── */
 const FadeUp = ({ children, delay = 0, className = '' }) => (
@@ -65,19 +40,6 @@ const security = [
   { icon: Shield, title: 'Privacy Protection', desc: 'We never read, sell, or share your data.' },
 ];
 
-function StatCard({ icon: Icon, value, suffix, label, color }) {
-  const [count, ref] = useCountUp(value);
-  return (
-    <div ref={ref} className="text-center">
-      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mx-auto mb-4 opacity-90`}>
-        <Icon size={24} className="text-white" />
-      </div>
-      <div className="text-4xl font-black text-white mb-1">{count.toLocaleString()}{suffix}</div>
-      <div className="text-sm text-gray-400 font-medium">{label}</div>
-    </div>
-  );
-}
-
 export default function Homepage() {
   const navigate = useNavigate();
 
@@ -101,7 +63,7 @@ export default function Homepage() {
         <div className="max-w-5xl mx-auto text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-purple-500/30 text-purple-400 text-sm font-medium mb-8">
-              <Star size={13} className="fill-purple-400" /> Trusted by 1,200+ users worldwide
+              <Star size={13} className="fill-purple-400" /> Built with user trust in mind
             </div>
           </motion.div>
 
@@ -140,7 +102,7 @@ export default function Homepage() {
             className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto"
           >
             {[
-              { icon: Shield, label: 'AES-256 Encrypted', sub: 'Military-grade security', color: 'text-purple-400', bg: 'bg-purple-500/10' },
+              { icon: Shield, label: 'AES-256 Encrypted', sub: 'Enterprise-grade security', color: 'text-purple-400', bg: 'bg-purple-500/10' },
               { icon: Zap, label: 'Lightning Fast', sub: 'Optimized CDN delivery', color: 'text-yellow-400', bg: 'bg-yellow-500/10' },
               { icon: Clock, label: 'Auto Cleanup', sub: 'Files expire automatically', color: 'text-blue-400', bg: 'bg-blue-500/10' },
             ].map(({ icon: Icon, label, sub, color, bg }) => (
@@ -222,28 +184,6 @@ export default function Homepage() {
         </div>
       </section>
 
-      {/* ── STATISTICS ── */}
-      <section className="px-6 py-24">
-        <div className="max-w-6xl mx-auto">
-          <FadeUp className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-blue-500/30 text-blue-400 text-sm font-medium mb-5">
-              <Server size={13} /> Platform Statistics
-            </div>
-            <h2 className="text-4xl font-black text-white mb-4">Trusted by <span className="gradient-text">Thousands</span></h2>
-            <p className="text-gray-400 max-w-xl mx-auto">Real numbers from our growing community of users.</p>
-          </FadeUp>
-
-          <div className="glass rounded-3xl p-10 md:p-16 border border-purple-500/20">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-10">
-              <StatCard icon={FileUp} value={5000} suffix="+" label="Files Uploaded" color="from-purple-600 to-purple-400" />
-              <StatCard icon={Download} value={12000} suffix="+" label="Total Downloads" color="from-pink-600 to-pink-400" />
-              <StatCard icon={HardDrive} value={30} suffix=" GB" label="Storage Capacity" color="from-blue-600 to-blue-400" />
-              <StatCard icon={Users} value={1200} suffix="+" label="Active Users" color="from-green-600 to-green-400" />
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ── SECURITY ── */}
       <section className="px-6 py-24">
         <div className="max-w-6xl mx-auto">
@@ -298,7 +238,7 @@ export default function Homepage() {
 
               <div className="relative z-10">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-white/20 text-white text-sm font-medium mb-6">
-                  <CheckCircle size={13} className="text-green-400" /> Free to use — No credit card required
+                  <CheckCircle size={13} className="text-green-400" /> Start sharing instantly
                 </div>
                 <h2 className="text-4xl sm:text-5xl font-black text-white mb-5">
                   Start Using <span className="gradient-text">NexVault</span> Today

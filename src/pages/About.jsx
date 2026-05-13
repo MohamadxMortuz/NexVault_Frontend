@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Shield, Zap, Heart, Users, Lock, Globe, ArrowRight } from 'lucide-react';
+import { Shield, Zap, Heart, Users, Lock, Globe, ArrowRight, UserCircle2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const FadeUp = ({ children, delay = 0, className = '' }) => (
@@ -15,17 +15,18 @@ const FadeUp = ({ children, delay = 0, className = '' }) => (
 );
 
 const team = [
-  { name: 'Alex Rivera', role: 'Founder & CEO', avatar: 'AR', color: 'from-purple-600 to-purple-400' },
-  { name: 'Priya Sharma', role: 'Lead Engineer', avatar: 'PS', color: 'from-pink-600 to-pink-400' },
-  { name: 'Jordan Lee', role: 'Security Architect', avatar: 'JL', color: 'from-blue-600 to-blue-400' },
-  { name: 'Sam Chen', role: 'Product Designer', avatar: 'SC', color: 'from-green-600 to-green-400' },
+  { name: 'Mohamad Mortuz', color: 'from-purple-600 to-purple-400' },
+  { name: 'Shivesh Srivastava', color: 'from-pink-600 to-pink-400' },
+  { name: 'Arnav Sharma', color: 'from-blue-600 to-blue-400' },
+  { name: 'Himanshu Raghwa', color: 'from-green-600 to-green-400' },
+  { name: 'Ayush Sharma', color: 'from-yellow-600 to-yellow-400' },
 ];
 
 const values = [
   { icon: Lock, title: 'Security First', desc: 'Every decision we make starts with security. Your files are encrypted before they ever leave your device.', color: 'text-purple-400', bg: 'bg-purple-500/10' },
   { icon: Zap, title: 'Speed & Reliability', desc: 'We obsess over performance. Fast uploads, instant links, and 99.9% uptime — always.', color: 'text-yellow-400', bg: 'bg-yellow-500/10' },
   { icon: Heart, title: 'User-Centric', desc: 'We build for real people. Simple, intuitive, and powerful — no technical knowledge required.', color: 'text-pink-400', bg: 'bg-pink-500/10' },
-  { icon: Globe, title: 'Open & Transparent', desc: 'No hidden fees, no data selling, no surprises. We believe in radical transparency.', color: 'text-blue-400', bg: 'bg-blue-500/10' },
+  { icon: Globe, title: 'Open & Transparent', desc: 'No data selling, no surprises. We believe in radical transparency.', color: 'text-blue-400', bg: 'bg-blue-500/10' },
 ];
 
 export default function About() {
@@ -56,8 +57,8 @@ export default function About() {
       {/* Mission */}
       <section className="px-6 py-20">
         <div className="max-w-6xl mx-auto">
-          <div className="glass rounded-3xl p-10 md:p-16 border border-purple-500/20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <FadeUp>
+          <div className="glass rounded-3xl p-10 md:p-16 border border-purple-500/20">
+            <FadeUp className="max-w-2xl">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-pink-500/30 text-pink-400 text-sm font-medium mb-6">
                 <Shield size={13} /> Our Mission
               </div>
@@ -70,21 +71,6 @@ export default function About() {
               <p className="text-gray-400 leading-relaxed">
                 Our platform is built on the principle that your files belong to you. We never read, analyze, or monetize your data. Period.
               </p>
-            </FadeUp>
-            <FadeUp delay={0.2}>
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { label: 'Founded', value: '2024' },
-                  { label: 'Team Size', value: '12+' },
-                  { label: 'Countries', value: '40+' },
-                  { label: 'Uptime', value: '99.9%' },
-                ].map(({ label, value }) => (
-                  <div key={label} className="card text-center">
-                    <div className="text-3xl font-black gradient-text mb-1">{value}</div>
-                    <div className="text-sm text-gray-400">{label}</div>
-                  </div>
-                ))}
-              </div>
             </FadeUp>
           </div>
         </div>
@@ -120,12 +106,12 @@ export default function About() {
             <h2 className="text-4xl font-black text-white mb-4">Meet the <span className="gradient-text">Team</span></h2>
             <p className="text-gray-400 max-w-xl mx-auto">The people behind NexVault, dedicated to building the most secure file sharing platform.</p>
           </FadeUp>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-            {team.map(({ name, role, avatar, color }, i) => (
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-5">
+            {team.map(({ name, role, color }, i) => (
               <FadeUp key={name} delay={i * 0.1}>
                 <div className="card text-center group hover:border-purple-500/50">
-                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mx-auto mb-4 text-white font-black text-lg group-hover:scale-110 transition-transform`}>
-                    {avatar}
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
+                    <UserCircle2 size={36} className="text-white" strokeWidth={1.5} />
                   </div>
                   <h4 className="text-sm font-bold text-white mb-1">{name}</h4>
                   <p className="text-xs text-gray-400">{role}</p>

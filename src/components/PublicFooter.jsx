@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import { Shield, Globe, AtSign, Briefcase, Heart } from 'lucide-react';
+import { Shield, Heart } from 'lucide-react';
+import { FaLinkedin, FaGithub } from 'react-icons/fa';
+import { SiGmail } from 'react-icons/si';
 
 export default function PublicFooter() {
   return (
@@ -20,11 +22,15 @@ export default function PublicFooter() {
               Secure file storage and sharing platform with end-to-end encryption and automatic cleanup.
             </p>
             <div className="flex gap-3">
-              {[Globe, AtSign, Briefcase].map((Icon, i) => (
-                <button key={i} className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-white hover:border-purple-500/50 transition-all">
-                  <Icon size={15} />
-                </button>
-              ))}
+              <a href="https://www.linkedin.com/in/mohamad-mortuz/" target="_blank" rel="noreferrer noopener" className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-blue-400 hover:border-blue-500/50 transition-all">
+                <FaLinkedin size={15} />
+              </a>
+              <a href="https://github.com/MohamadxMortuz" target="_blank" rel="noreferrer noopener" className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-white hover:border-purple-500/50 transition-all">
+                <FaGithub size={15} />
+              </a>
+              <a href="mailto:starkxjarvis1@gmail.com" className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-red-400 hover:border-red-500/50 transition-all">
+                <SiGmail size={15} />
+              </a>
             </div>
           </div>
 
@@ -46,7 +52,7 @@ export default function PublicFooter() {
             <ul className="space-y-3">
               {['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'Security'].map(item => (
                 <li key={item}>
-                  <a href="#" className="text-sm text-gray-400 hover:text-purple-400 transition-colors">{item}</a>
+                  <span className="text-sm text-gray-400 cursor-default">{item}</span>
                 </li>
               ))}
             </ul>
@@ -56,7 +62,7 @@ export default function PublicFooter() {
           <div>
             <h4 className="text-sm font-bold text-white mb-5 uppercase tracking-wider">Contact</h4>
             <ul className="space-y-3">
-              <li className="text-sm text-gray-400">support@nexvault.io</li>
+              <li className="text-sm text-gray-400">starkxjarvis1@gmail.com</li>
               <li className="text-sm text-gray-400">Mon–Fri, 9am–6pm IST</li>
               <li>
                 <Link to="/contact" className="text-sm text-purple-400 hover:text-purple-300 transition-colors font-medium">Send a message →</Link>

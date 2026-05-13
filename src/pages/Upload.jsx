@@ -1,5 +1,5 @@
-import { useState, useRef, useCallback } from 'react';
-import { Upload, File, X, CheckCircle, Copy, Clock, Trash2, CloudUpload, Shield, Zap, Lock } from 'lucide-react';
+import { useState, useRef, useCallback, useEffect } from 'react';
+import { Upload, X, CheckCircle, Copy, Clock, Trash2, CloudUpload, Shield, Zap, Lock, History, HardDrive, Download } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const API = 'http://localhost:5001/api';
@@ -105,6 +105,27 @@ export default function UploadPage() {
   };
 
   const copyLink = () => { navigator.clipboard.writeText(done.link); setCopied(true); setTimeout(() => setCopied(false), 2000); };
+
+  const [history, setHistory] = useState([]);
+
+  useEffect(() => {
+    const t = token();
+    if (!t) return;
+    fetch(`${API}/files/my-files`, { headers: { Authorization: `Bearer ${t}` } })
+      .then(r => r.json())
+      .then(data => setHistory(data.files || []))
+      .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [done]);
+
+  const deleteFile = async (id) => {
+    try {
+      await fetch(`${API}/files/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token()}` } });
+      setHistory(prev => prev.filter(f => f.id !== id));
+    } catch {}
+  };
+
+  const fmt2 = (b) => b > 1e9 ? (b / 1e9).toFixed(2) + ' GB' : b > 1e6 ? (b / 1e6).toFixed(2) + ' MB' : (b / 1024).toFixed(1) + ' KB';
 
   const reset = () => { setFile(null); setForm({ name: '', desc: '', expiry: 'after-download' }); setDone(null); setProgress(0); setErrors({}); setUploadError(''); setSpeed(''); setUploaded(0); };
 
@@ -311,6 +332,48 @@ export default function UploadPage() {
             </button>
           </div>
         )}
+
+        {/* Upload History */}
+        <div className="card mt-6 animate-fade-up">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-base font-bold text-white flex items-center gap-2">
+              <History size={16} className="text-purple-400" /> Upload History
+            </h2>
+            <span className="badge badge-purple">{history.length} files</span>
+          </div>
+          {history.length === 0 ? (
+            <div className="text-center py-10">
+              <div className="text-4xl mb-3 opacity-20">📭</div>
+              <p className="text-gray-500 text-sm">No uploads yet</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {history.map(f => (
+                <div key={f.id} className="flex items-center gap-4 p-4 rounded-2xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style={{ background: 'rgba(108,99,255,0.1)' }}>
+                    {fileIcon(f.originalName)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white text-sm font-semibold truncate">{f.originalName}</p>
+                    <div className="flex items-center gap-3 mt-1 flex-wrap">
+                      <span className="flex items-center gap-1 text-xs text-gray-500"><HardDrive size={11} /> {fmt2(f.size)}</span>
+                      <span className="flex items-center gap-1 text-xs text-gray-500"><Download size={11} /> {f.downloads || 0} downloads</span>
+                      <span className="flex items-center gap-1 text-xs text-gray-500"><Clock size={11} /> {new Date(f.uploadedAt).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => deleteFile(f.id)}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors"
+                    style={{ background: 'rgba(239,68,68,0.1)', color: '#f87171' }}
+                    title="Delete file"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       <style>{`

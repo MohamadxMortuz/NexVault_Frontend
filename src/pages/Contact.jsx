@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Mail, Send, CheckCircle, MapPin, MessageSquare, Globe, AtSign, Briefcase, ChevronDown } from 'lucide-react';
+import { Mail, Send, CheckCircle, MapPin, ChevronDown } from 'lucide-react';
+import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { SiGmail } from 'react-icons/si';
 
 const faqs = [
   { q: 'How long are files stored?', a: 'Files can be set to delete after download, after 24 hours, 7 days, or kept indefinitely based on your selection.' },
@@ -65,30 +67,46 @@ export default function ContactPage() {
               <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
                 <MapPin size={15} className="text-purple-400" /> Get In Touch
               </h3>
-              {[
-                { icon: Mail, label: 'Email', value: 'support@nexvault.io', color: 'text-purple-400', bg: 'bg-purple-500/10' },
-                { icon: MessageSquare, label: 'Live Chat', value: 'Mon–Fri, 9am–6pm IST', color: 'text-blue-400', bg: 'bg-blue-500/10' },
-                { icon: Globe, label: 'GitHub', value: 'github.com/nexvault', color: 'text-gray-300', bg: 'bg-white/5' },
-              ].map(({ icon: Icon, label, value, color, bg }) => (
-                <div key={label} className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/3 transition-colors group cursor-pointer mb-2">
-                  <div className={`w-9 h-9 rounded-xl ${bg} flex items-center justify-center flex-shrink-0`}>
-                    <Icon size={16} className={color} />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">{label}</p>
-                    <p className="text-sm text-white">{value}</p>
-                  </div>
+              <a href="mailto:starkxjarvis1@gmail.com" className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/3 transition-colors group cursor-pointer mb-2">
+                <div className="w-9 h-9 rounded-xl bg-red-500/10 flex items-center justify-center flex-shrink-0">
+                  <SiGmail size={16} className="text-red-400" />
                 </div>
-              ))}
+                <div>
+                  <p className="text-xs text-gray-500 font-medium">Email</p>
+                  <p className="text-sm text-white">starkxjarvis1@gmail.com</p>
+                </div>
+              </a>
+              <a href="https://github.com/MohamadxMortuz" target="_blank" rel="noreferrer noopener" className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/3 transition-colors group cursor-pointer mb-2">
+                <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center flex-shrink-0">
+                  <FaGithub size={16} className="text-gray-300" />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 font-medium">GitHub</p>
+                  <p className="text-sm text-white">github.com/MohamadxMortuz</p>
+                </div>
+              </a>
+              <a href="https://www.linkedin.com/in/mohamad-mortuz/" target="_blank" rel="noreferrer noopener" className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/3 transition-colors group cursor-pointer mb-2">
+                <div className="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                  <FaLinkedin size={16} className="text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 font-medium">LinkedIn</p>
+                  <p className="text-sm text-white">linkedin.com/in/mohamad-mortuz</p>
+                </div>
+              </a>
 
               <div className="mt-4 pt-4 border-t border-white/5">
-                <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-3">Follow Us</p>
+                <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-3">Connect</p>
                 <div className="flex gap-2">
-                  {[Globe, AtSign, Briefcase].map((Icon, i) => (
-                    <button key={i} className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-white hover:border-purple-500/40 transition-all">
-                      <Icon size={15} />
-                    </button>
-                  ))}
+                  <a href="mailto:starkxjarvis1@gmail.com" className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-red-400 hover:border-red-500/40 transition-all">
+                    <SiGmail size={15} />
+                  </a>
+                  <a href="https://github.com/MohamadxMortuz" target="_blank" rel="noreferrer noopener" className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-white hover:border-purple-500/40 transition-all">
+                    <FaGithub size={15} />
+                  </a>
+                  <a href="https://www.linkedin.com/in/mohamad-mortuz/" target="_blank" rel="noreferrer noopener" className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-blue-400 hover:border-blue-500/40 transition-all">
+                    <FaLinkedin size={15} />
+                  </a>
                 </div>
               </div>
             </div>

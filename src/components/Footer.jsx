@@ -1,5 +1,7 @@
-import { Shield, Globe, AtSign, Briefcase } from 'lucide-react';
+import { Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { FaLinkedin, FaGithub } from 'react-icons/fa';
+import { SiGmail } from 'react-icons/si';
 
 export default function Footer() {
   return (
@@ -20,11 +22,15 @@ export default function Footer() {
               Secure File Sharing Platform. Upload and share files up to 30 GB with automatic cleanup.
             </p>
             <div className="flex gap-3 mt-4">
-              {[Globe, AtSign, Briefcase].map((Icon, i) => (
-                <button key={i} className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-white hover:border-purple-500/50 transition-all">
-                  <Icon size={16} />
-                </button>
-              ))}
+              <a href="https://www.linkedin.com/in/mohamad-mortuz/" target="_blank" rel="noreferrer noopener" className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-blue-400 hover:border-blue-500/50 transition-all">
+                <FaLinkedin size={16} />
+              </a>
+              <a href="https://github.com/MohamadxMortuz" target="_blank" rel="noreferrer noopener" className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-white hover:border-purple-500/50 transition-all">
+                <FaGithub size={16} />
+              </a>
+              <a href="mailto:starkxjarvis1@gmail.com" className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-red-400 hover:border-red-500/50 transition-all">
+                <SiGmail size={16} />
+              </a>
             </div>
           </div>
 
