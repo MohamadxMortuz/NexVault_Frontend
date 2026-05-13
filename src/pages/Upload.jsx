@@ -113,9 +113,9 @@ export default function UploadPage() {
     const t = token();
     if (!t) { setHistoryLoading(false); return; }
     setHistoryLoading(true);
-    fetch(`${API}/files/my-files`, { headers: { Authorization: `Bearer ${t}` } })
+    fetch(`${API}/files/upload-history`, { headers: { Authorization: `Bearer ${t}` } })
       .then(r => r.json())
-      .then(data => { setHistory(data.files || []); setHistoryLoading(false); })
+      .then(data => { setHistory(data.history || []); setHistoryLoading(false); })
       .catch(() => setHistoryLoading(false));
   };
 
@@ -373,27 +373,32 @@ export default function UploadPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              {history.map(f => (
-                <div key={f.id} className="flex items-center gap-4 p-4 rounded-2xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+              {history.map((f, i) => (
+                <div key={f._id || i} className="flex items-center gap-4 p-4 rounded-2xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                   <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style={{ background: 'rgba(108,99,255,0.1)' }}>
-                    {fileIcon(f.originalName)}
+                    {fileIcon(f.fileName || f.originalName)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-white text-sm font-semibold truncate">{f.originalName}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-white text-sm font-semibold truncate">{f.fileName || f.originalName}</p>
+                      {f.deleted && <span className="badge badge-red text-xs flex-shrink-0">Deleted</span>}
+                    </div>
                     <div className="flex items-center gap-3 mt-1 flex-wrap">
-                      <span className="flex items-center gap-1 text-xs text-gray-500"><HardDrive size={11} /> {fmt2(f.size)}</span>
-                      <span className="flex items-center gap-1 text-xs text-gray-500"><Download size={11} /> {f.downloads || 0} downloads</span>
+                      <span className="flex items-center gap-1 text-xs text-gray-500"><HardDrive size={11} /> {fmt2(f.fileSize || f.size)}</span>
                       <span className="flex items-center gap-1 text-xs text-gray-500"><Clock size={11} /> {new Date(f.uploadedAt).toLocaleDateString()}</span>
+                      {f.expiry && <span className="text-xs text-gray-500">{f.expiry === 'after-download' ? '🗑️ After download' : f.expiry === 'never' ? '♾️ Keep' : `⏰ ${f.expiry}`}</span>}
                     </div>
                   </div>
-                  <button
-                    onClick={() => deleteFile(f.id)}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors"
-                    style={{ background: 'rgba(239,68,68,0.1)', color: '#f87171' }}
-                    title="Delete file"
-                  >
-                    <Trash2 size={14} />
-                  </button>
+                  {!f.deleted && (
+                    <button
+                      onClick={() => deleteFile(f._id)}
+                      className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors"
+                      style={{ background: 'rgba(239,68,68,0.1)', color: '#f87171' }}
+                      title="Delete file"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
