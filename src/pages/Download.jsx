@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Download, Search, FileText, AlertCircle, CheckCircle, Clock, Trash2, HardDrive, Zap, Shield, Copy, History } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-const API = 'http://localhost:5001/api';
+const API = process.env.REACT_APP_API_URL;
 
 const fmt = (b) => {
   if (!b) return '—';

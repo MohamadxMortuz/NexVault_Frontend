@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { Upload, X, CheckCircle, Copy, Clock, Trash2, CloudUpload, Shield, Zap, Lock, History, HardDrive, Download } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-const API = 'http://localhost:5001/api';
+const API = process.env.REACT_APP_API_URL;
 
 const fmt = (b) => b > 1e9 ? (b / 1e9).toFixed(2) + ' GB' : b > 1e6 ? (b / 1e6).toFixed(2) + ' MB' : (b / 1024).toFixed(1) + ' KB';
 
