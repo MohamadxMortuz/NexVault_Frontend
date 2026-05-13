@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { Upload, X, CheckCircle, Copy, Clock, Trash2, CloudUpload, Shield, Zap, Lock, History, HardDrive, Download } from 'lucide-react';
+import { Upload, X, CheckCircle, Copy, Clock, Trash2, CloudUpload, Shield, Zap, Lock, History, HardDrive } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const API = process.env.REACT_APP_API_URL;
